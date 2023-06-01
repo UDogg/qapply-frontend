@@ -9,10 +9,12 @@ interface Data {
 }
 
 let host = ''; // Initialize host as an empty string
+let port = ''; // Initialize port as an empty string
 
 if (typeof window !== 'undefined') {
   // Check if the code is running in the browser environment
   host = window.location.hostname;
+  port = window.location.port;
 }
 
 function Home() {
@@ -47,7 +49,7 @@ function Home() {
 
   async function fetchEmployeeType() {
     try {
-      const response = await axios.get<{ employeetype: string }>(`http://${host}:8000/api/v1/whoami`);
+      const response = await axios.get<{ employeetype: string }>(`http://${host}:${port}/api/v1/whoami`);
       setEmployeeType(response.data.employeetype);
     } catch (error) {
       console.error(error);
