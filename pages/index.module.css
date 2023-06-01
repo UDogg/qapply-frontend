@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #7EC8E3; 
+  height: 100vh;
+  font-family: 'Outfit', sans-serif;
+}
+
+.heading {
+  font-size: 48px;
+  color: #000;  
+  font-weight: bold;
+}
+
+.heading:hover{
+    font-size: 64px;
+    color: #003060;
+}
+
+.buttonsContainer {
+  margin-top: 16px;
+}
+
+.button {
+  background-color: #FF6863; /* Update background color */
+  color: black; /* Set text color to black */
+  border: 2px solid white;
+  padding: 16px 32px; /* Adjust padding */
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: bold;
+  font-size: 24px; /* Increase font size */
+  cursor: pointer;
+  transition: font-size 0.3s, background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #FFC300; /* Update background color on hover */
+  font-size: 28px; /* Increase font size on hover */
+}
+
+.dataContainer {
+  background-color: #FF6863;
+  padding: 16px;
+  border-radius: 8px;
+  border: 2px solid #000;
+  margin-top: 16px;
+  text-align: center;
+}
+
+.dataContainer:hover{
+    background-color: #FFC300;
+    font:28px;
+    user-select: auto;
+}
+
+.label {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
