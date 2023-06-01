@@ -1,47 +1,54 @@
 import { useEffect, useState } from 'react';
-import styles from './index.module.css'; 
+import axios from 'axios';
+import styles from './index.module.css';
 
 interface Data {
   lang: string;
   greeting: string;
-  time: string; 
+  time: string;
 }
 
+let host = ''; // Initialize host as an empty string
+
+if (typeof window !== 'undefined') {
+  // Check if the code is running in the browser environment
+  host = window.location.hostname;
+}
 
 function Home() {
   const [data, setData] = useState<Data>({ lang: '', greeting: '', time: '' });
   const [time, setTime] = useState<string>('');
   const [showHelloData, setShowHelloData] = useState<boolean>(false);
   const [showTimeData, setShowTimeData] = useState<boolean>(false);
-
-
+  const [employeeType, setEmployeeType] = useState<string>('');
 
   useEffect(() => {
     fetchData();
-    fetchTime();
+    fetchEmployeeType();
   }, []);
-  
 
   async function fetchData() {
     try {
-      const response = await fetch('http://localhost:8000/api/v1/hello');
-      if (!response.ok) {
-        throw new Error('API request failed');
-      }
-      const data = await response.json();
-      setData(data);
+      const response = await axios.get<Data>(`http://${host}:8000/api/v1/hello`);
+      setData(response.data);
     } catch (error) {
       console.error(error);
     }
   }
+
   async function fetchTime() {
     try {
-      const response = await fetch('http://localhost:8000/api/v1/time');
-      if (!response.ok) {
-        throw new Error('API request failed');
-      }
-      const { time } = await response.json();
-      setTime(time);
+      const response = await axios.get<{ time: string }>(`http://${host}:8000/api/v1/time`);
+      setTime(response.data.time);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function fetchEmployeeType() {
+    try {
+      const response = await axios.get<{ employeetype: string }>(`http://${host}:8000/api/v1/whoami`);
+      setEmployeeType(response.data.employeetype);
     } catch (error) {
       console.error(error);
     }
@@ -55,30 +62,40 @@ function Home() {
   function handleTimeClick() {
     setShowHelloData(false);
     setShowTimeData(true);
+    fetchTime(); // Fetch the current time when the button is clicked
   }
 
-
-  
-  
-  
   return (
-    <div className={styles.container}> {/* Apply container class */}
-      <h1 className={styles.heading}>Hello Next.js</h1> {/* Apply heading class */}
-      <div className={styles.buttonsContainer}> {/* Apply buttonsContainer class */}
-        <button className={styles.button} onClick={handleHelloClick}>Fetch Hello Data</button> {/* Apply button class */}
-        <button className={styles.button} onClick={handleTimeClick}>Fetch Time Data</button> {/* Apply button class */}
-      </div>
+    <div className={styles.container}>
+      <h1 className={styles.heading}>Hello Next.js</h1>
+      {employeeType === 'fac' && (
+        <div className={styles.buttonsContainer}>
+          <button className={styles.button} onClick={handleHelloClick}>
+            Fetch Hello Data
+          </button>
+          <button className={styles.button} onClick={handleTimeClick}>
+            Fetch Time Data
+          </button>
+        </div>
+      )}
+      {employeeType !== 'fac' && (
+        <div className={styles.buttonsContainer}>
+          <button className={styles.button} onClick={handleTimeClick}>
+            Fetch Time Data
+          </button>
+        </div>
+      )}
       {showHelloData && (
-        <div className={styles.dataContainer}> {/* Apply dataContainer class */}
-          <p className={styles.label}>Language:</p> {/* Apply label class */}
+        <div className={styles.dataContainer}>
+          <p className={styles.label}>Language:</p>
           <p>{data.lang}</p>
-          <p className={styles.label}>Greeting:</p> {/* Apply label class */}
+          <p className={styles.label}>Greeting:</p>
           <p>{data.greeting}</p>
         </div>
       )}
       {showTimeData && (
-        <div className={styles.dataContainer}> {/* Apply dataContainer class */}
-          <p className={styles.label}>Current time:</p> {/* Apply label class */}
+        <div className={styles.dataContainer}>
+          <p className={styles.label}>Current time:</p>
           <p>{time || 'N/A'}</p>
         </div>
       )}
